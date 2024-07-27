@@ -1,6 +1,7 @@
 /*eslint-disable*/
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "context/authContext";
 
 // components
 
@@ -8,6 +9,8 @@ import PagesDropdown from "components/Dropdowns/PagesDropdown.js";
 
 export default function Navbar(props) {
   const [navbarOpen, setNavbarOpen] = React.useState(false);
+  const { currentUser, logout } = useContext(AuthContext);
+
   return (
     <>
       <nav className="top-0 absolute z-50 w-full flex flex-wrap items-center justify-between px-2 py-3 navbar-expand-lg">
@@ -52,16 +55,58 @@ export default function Navbar(props) {
                   <span className="inline-block ml-2">Search Flight</span>
                 </a>
               </li>
-
-              <li className="flex items-center">
+                
+              {currentUser ? (
+                <>
+                <li className="flex items-center">
+                  <a
+                    className="lg:text-white lg:hover:text-blueGray-200 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold"
+                    href="/profile"
+                  >
+                    <span className="inline-block ml-2">Profile</span>
+                  </a>
+                  </li>
+                  <li className="flex items-center">
+                  <a
+                    className="lg:text-white lg:hover:text-blueGray-200 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold"
+                    href="/admin"
+                  >
+                    <span className="inline-block ml-2">Dashboard</span>
+                  </a>
+                </li>
+                <li className="flex items-center">
+                  <Link to="/logout">
+                    <a
+                      className="lg:text-white lg:hover:text-blueGray-200 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold"
+                      href="#pablo" >
+                      <span className="inline-block ml-2">Logout</span>
+                    </a>
+                  </Link>
+                </li>
+                </>
+              ) : (
+                <>
+                <li className="flex items-center">
                 <a
                   className="lg:text-white lg:hover:text-blueGray-200 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold"
-                  href="auth/login"
+                  href="/auth/login"
                 >
                   <span className="inline-block ml-2">Login</span>
                 </a>
+                </li>
+                <li className="flex items-center">
+                <Link to="/auth/register">
+                  <a
+                    className="lg:text-white lg:hover:text-blueGray-200 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold"
+                    href="/auth/register"
+                  >
+                    <span className="inline-block ml-2">Register</span>
+                  </a>
+                </Link>
               </li>
-
+                  </>
+              )}
+              
               <li className="flex items-center">
                 <PagesDropdown />
               </li>

@@ -11,18 +11,28 @@ import Auth from "layouts/Auth.js";
 import Landing from "./views/Landing.js";
 import Profile from "views/Profile.js";
 
+import { AuthProvider } from "context/authContext.js";
+import PrivateRoute from "components/PrivateRoute.js";
+import Logout from "components/logout.js";
+
+import { Toaster } from "react-hot-toast";
+
 ReactDOM.render(
+  <AuthProvider>
+    <Toaster />
   <BrowserRouter>
     <Switch>
       {/* add routes with layouts */}
-      <Route path="/admin" component={Admin} />
-      <Route path="/auth" component={Auth} />
+        <Route path="/auth" component={Auth} />
       {/* add routes without layouts */}
-      <Route path="/" exact component={Landing} />
-      <Route path="/profile" exact component={Profile} />
+        <Route path="/" exact component={Landing} />
+        <PrivateRoute path='/profile' component={Profile} />
+        <PrivateRoute path="/admin" component={Admin} />
+        <PrivateRoute path="/logout" component={Logout} />
       {/* add redirect for first page */}
-      <Redirect from="*" to="/" />
+        <Redirect from="*" to="/" />
     </Switch>
-  </BrowserRouter>,
+    </BrowserRouter>
+    </AuthProvider>,
   document.getElementById("root")
 );
