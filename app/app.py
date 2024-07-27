@@ -4,6 +4,7 @@ from pymongo.server_api import ServerApi
 from config import Config
 from dotenv import load_dotenv
 import os
+from flask_cors import CORS
 
 load_dotenv()
 
@@ -14,6 +15,8 @@ def create_app():
     app = Flask(__name__)
     config = Config(os.getenv('MONGO_UID'), os.getenv('MONGO_PWD'), os.getenv('SECRET_KEY'))
     app.config.from_object(config)
+
+    CORS(app, resources={r"/*": {"origins": "*"}})
 
     client = MongoClient(app.config['MONGODB_URL'], server_api=ServerApi('1'))
     app.db = client['data-server']

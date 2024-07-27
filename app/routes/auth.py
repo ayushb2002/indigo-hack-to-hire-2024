@@ -23,11 +23,15 @@ def register():
     data = request.get_json()
     db = current_app.db
     if find_user_by_username(db, data['username']):
-        return jsonify({'message': 'Username already exists'}), 409
+        return jsonify({'message': 'Username already exists', 'status': 'failed'}), 409
 
     create_user(db, data['username'], data['password'], data['role'], data['email'], data['name'])
+    token = jwt.encode({
+            'username': data['username'],
+            'exp': datetime.utcnow() + timedelta(hours=1)
+        }, current_app.config['SECRET_KEY'], algorithm="HS256")
 
-    return jsonify({'message': 'User registered successfully'}), 201
+    return jsonify({'token': token, 'status': 'success', 'username': data['username'], 'email': data['email'], 'name': data['name'], 'role': data['role']}), 201
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
@@ -40,6 +44,6 @@ def login():
             'username': user['username'],
             'exp': datetime.utcnow() + timedelta(hours=1)
         }, current_app.config['SECRET_KEY'], algorithm="HS256")
-        return jsonify({'token': token}), 200
+        return jsonify({'token': token, 'username': user['username'], 'name': user['name'], 'email': user['email'], 'role': user['role'], 'status': 'success'}), 200
 
-    return jsonify({'message': 'Invalid credentials'}), 401
+    return jsonify({'message': 'Invalid credentials', 'status': 'failed'}), 401
