@@ -2,21 +2,9 @@ from flask import Blueprint, request, jsonify, current_app
 from datetime import datetime, timedelta
 import jwt
 from models import create_user, find_user_by_username, verify_password
+from decorators import token_required
 
 auth_bp = Blueprint('auth', __name__)
-
-def token_required(f):
-    def decorator(*args, **kwargs):
-        token = request.headers.get('Authorization')
-        if not token:
-            return jsonify({'message': 'Token is missing!'}), 403
-        try:
-            data = jwt.decode(token.split(" ")[1], current_app.config['SECRET_KEY'], algorithms=["HS256"])
-            current_user = find_user_by_username(current_app.db, data['username'])
-        except Exception as e:
-            return jsonify({'message': 'Token is invalid!', 'error': str(e)}), 403
-        return f(current_user, *args, **kwargs)
-    return decorator
 
 @auth_bp.route('/register', methods=['POST'])
 def register():
@@ -47,3 +35,22 @@ def login():
         return jsonify({'token': token, 'username': user['username'], 'name': user['name'], 'email': user['email'], 'role': user['role'], 'status': 'success'}), 200
 
     return jsonify({'message': 'Invalid credentials', 'status': 'failed'}), 401
+
+@auth_bp.route('/update-role', methods=['POST'])
+@token_required
+def update_role(current_user):
+    data = request.get_json()
+    username = data.get('username')
+    new_role = data.get('role')
+    db = current_app.db
+    
+    if not username or not new_role:
+        return jsonify({'message': 'Username and role are required', 'status': 'failed'}), 400
+
+    user = db.users.find_one({'username': username})
+
+    if not user:
+        return jsonify({'message': 'User not found', 'status': 'failed'}), 404
+
+    db.users.update_one({'username': username}, {'$set': {'role': new_role}})
+    return jsonify({'message': f'User role updated to {new_role} successfully', 'status': 'success'}), 200
