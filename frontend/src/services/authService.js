@@ -40,9 +40,23 @@ const getCurrentUser = () => {
     return JSON.parse(localStorage.getItem('user'));
 };
 
+const updateRole = async (username, role, token) => {
+    const response = await axios.post(`${API_URL}/auth/update-role`, {
+        'username': username,
+        'role': role
+    }, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    return response.data;
+}
+
 export default {
     register,
     login,
     logout,
-    getCurrentUser
+    getCurrentUser,
+    updateRole
 };

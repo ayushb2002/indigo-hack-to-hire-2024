@@ -71,20 +71,16 @@ export default function Profile() {
                   </div>
                 </div>
                 <div className="text-center mt-12">
-                  <h3 className="text-4xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2">
-                    {currentUser.name}
+                  <h3 className="text-4xl font-semibold leading-normal mb-2 text-blueGray-700">
+                    Welcome - {currentUser.name}
                   </h3>
                   <div className="text-sm leading-normal mt-0 mb-2 text-blueGray-400 font-bold uppercase">
-                    <i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>{" "}
-                    {currentUser.username}
+                    <i className="fas fa-user mr-2 text-lg text-blueGray-400"></i>{" "}
+                    Username - {currentUser.username}
                   </div>
                   <div className="mb-2 text-blueGray-600 mt-10">
-                    <i className="fas fa-briefcase mr-2 text-lg text-blueGray-400"></i>
-                    {currentUser.email}
-                  </div>
-                  <div className="mb-2 text-blueGray-600">
-                    <i className="fas fa-university mr-2 text-lg text-blueGray-400"></i>
-                    {currentUser.role}
+                    <i className="fas fa-envelope mr-2 text-lg text-blueGray-400"></i>{" "}
+                    Email Address - {currentUser.email}
                   </div>
                 </div>
                 <div className="mt-10 py-10 border-t border-blueGray-200 text-center">

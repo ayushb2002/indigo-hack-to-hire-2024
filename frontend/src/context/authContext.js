@@ -32,8 +32,13 @@ const AuthProvider = ({ children }) => {
         });
     };
 
+    const updateRole = (username, role) => {
+        const res = authService.updateRole(username, role, currentUser.token);
+        return res;
+    }
+
     return (
-        <AuthContext.Provider value={{ currentUser, login, logout, register }}>
+        <AuthContext.Provider value={{ currentUser, login, logout, register, updateRole }}>
             {children}
         </AuthContext.Provider>
     );
