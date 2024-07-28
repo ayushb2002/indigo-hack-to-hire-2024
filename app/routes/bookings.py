@@ -22,7 +22,7 @@ def create():
 def get_bookings_by_flight_all(flight_number):
     db = current_app.db
     bookings = search_by_flight_number(db, flight_number, 'all')
-    return jsonify(bookings), 200
+    return json.loads(json_util.dumps(bookings)), 200
 
 @token_required
 @admin_or_staff_required
@@ -38,28 +38,28 @@ def get_bookings_by_flight_pending(flight_number):
 def get_bookings_by_flight_boarded(flight_number):
     db = current_app.db
     bookings = search_by_flight_number(db, flight_number, 'boarded')
-    return jsonify(bookings), 200
+    return json.loads(json_util.dumps(bookings)), 200
 
 @token_required
 @bookings_bp.route('/by-username-all/<username>', methods=['GET'])
 def get_bookings_by_username_all(username):
     db = current_app.db
     bookings = search_by_username(db, username, 'all')
-    return jsonify(bookings), 200
+    return json.loads(json_util.dumps(bookings)), 200
 
 @token_required
 @bookings_bp.route('/by-username-pending/<username>', methods=['GET'])
 def get_bookings_by_username_pending(username):
     db = current_app.db
-    bookings = search_by_username(db, username, 'pending')
-    return jsonify(bookings), 200
+    bookings = search_by_username(db, username, 'confirmed')
+    return json.loads(json_util.dumps(bookings)), 200
 
 @token_required
 @bookings_bp.route('/by-username-boarded/<username>', methods=['GET'])
 def get_bookings_by_username_boarded(username):
     db = current_app.db
     bookings = search_by_username(db, username, 'boarded')
-    return jsonify(bookings), 200
+    return json.loads(json_util.dumps(bookings)), 200
 
 
 @bookings_bp.route('/update-status', methods=['POST'])

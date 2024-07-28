@@ -133,7 +133,7 @@ def search_by_username(db, username, option):
         bookings = list(db.bookings.find({'username': user}))
         for booking in bookings:
             booking['_id'] = str(booking['_id'])
-    elif option == 'pending':
+    elif option == 'confirmed':
         bookings = list(db.bookings.find({'username': user, 'booking_status': {'$eq': 'confirmed'}}))
         for booking in bookings:
             booking['_id'] = str(booking['_id'])
