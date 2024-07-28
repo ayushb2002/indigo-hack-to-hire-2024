@@ -17,14 +17,15 @@ producer = KafkaProducer(
 def send_notification(current_user):
     data = request.get_json()
     
-    if 'flight_number' not in data or 'message' not in data:
+    if 'flight_number' not in data or 'message' not in data or 'subject' not in data:
         return jsonify({'message': 'Invalid request'}), 400
 
     flight_number = data['flight_number']
     message = data['message']
+    subject = data['subject']
 
     # Publish the message to a Kafka topic
-    producer.send('notifications', {'flight_number': flight_number, 'message': message})
+    producer.send('notifications', {'flight_number': flight_number, 'message': message, 'subject': subject})
     
     return jsonify({'message': 'Notification sent successfully'}), 200
 
@@ -34,12 +35,13 @@ def send_notification(current_user):
 def broadcast_notification(current_user):
     data = request.get_json()
     
-    if 'message' not in data:
+    if 'message' not in data or 'subject' not in data:
         return jsonify({'message': 'Invalid request'}), 400
 
     message = data['message']
+    subject = data['subject']
 
     # Broadcast the message to all users (or to a specific topic)
-    producer.send('broadcasts', {'message': message})
+    producer.send('broadcasts', {'message': message, 'subject': subject})
     
     return jsonify({'message': 'Broadcast sent successfully'}), 200

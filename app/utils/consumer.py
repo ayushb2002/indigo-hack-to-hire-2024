@@ -16,4 +16,5 @@ for message in consumer:
     notification = message.value
     flight_number = notification['flight_number']
     message_content = notification['message']
-    print(f"Received notification for flight {flight_number}: {message_content}")
+    subject_content = notification['subject']
+    print(f"Received notification for flight {flight_number}, {subject_content} : {message_content}")

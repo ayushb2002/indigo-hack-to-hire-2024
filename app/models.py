@@ -37,9 +37,18 @@ def create_flight(db, flight_number, departure, destination, departure_time, arr
         'departure': departure,
         'destination': destination,
         'departure_time': departure_time,
-        'arrival_time': arrival_time
+        'arrival_time': arrival_time,
+        'active': True
     }
     flights.insert_one(flight)
+
+def deactivate_flight(db, flight_number):
+    flights = get_flight_collection(db)
+    result = flights.update_one(
+        {'flight_number': flight_number},
+        {'$set': {'active': False}}
+    )
+    return result.matched_count > 0
 
 def find_flight_by_id(db, flight_id):
     flights = get_flight_collection(db)
@@ -62,9 +71,21 @@ def get_booking_collection(db):
 
 def create_booking(db, username, flight_number, seat_number, booking_status):
     bookings = get_booking_collection(db)
+    user = find_user_by_username(db, username)
+    flight = find_flight_by_number(db, flight_number)
+    
+    if not user:
+        raise ValueError("User not found")
+
+    if not flight:
+        raise ValueError("Flight not found")
+
+    if not flight['active']:
+        raise ValueError("Flight is not active")
+
     booking = {
-        'username': find_user_by_username(db, username),
-        'flight_id': find_flight_by_number(db, flight_number),
+        'username': user['_id'],
+        'flight_id': flight['_id'],
         'seat_number': seat_number,
         'booking_status': booking_status
     }
@@ -89,3 +110,35 @@ def is_seat_booked(db, flight_number, seat_number):
     # Check if there is a booking with the given seat number for this flight
     booking = bookings.find_one({'flight_id': flight_id, 'seat_number': seat_number})
     return booking is not None
+
+def search_by_flight_number(db, flight_number, option):
+    if option == 'all':
+        bookings = list(db.bookings.find({'flight_number': flight_number}))
+        for booking in bookings:
+            booking['_id'] = str(booking['_id'])
+    else:
+        bookings = list(db.bookings.find({'flight_number': flight_number, 'booking_status': {'$ne': 'boarded'}}))
+        for booking in bookings:
+            booking['_id'] = str(booking['_id'])
+        
+    return bookings
+
+def search_by_username(db, username, option):
+    if option == 'all':
+        bookings = list(db.bookings.find({'username': username}))
+        for booking in bookings:
+            booking['_id'] = str(booking['_id'])
+    else:
+        bookings = list(db.bookings.find({'username': username, 'booking_status': {'$ne': 'boarded'}}))
+        for booking in bookings:
+            booking['_id'] = str(booking['_id'])
+    
+    return bookings
+
+def update_booking_status(db, booking_id):
+    result = db.bookings.update_one(
+        {'_id': ObjectId(booking_id)},
+        {'$set': {'booking_status': 'boarded'}}
+    )
+    
+    return result

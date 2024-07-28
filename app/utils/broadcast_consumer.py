@@ -13,8 +13,6 @@ consumer = KafkaConsumer(
 
 print("Listening for messages on 'broadcasts' topic...")
 
-# Consume messages from the topic
 for message in consumer:
     broadcast_message = message.value
-    print(f"Received broadcast message: {broadcast_message['message']}")
-    # Here, you can add code to handle the broadcast message, such as sending it to all connected clients
+    print(f"{broadcast_message['subject']} : {broadcast_message['message']}.\n")
