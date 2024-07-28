@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { AnnouncementContext } from "context/announcementContext";
 import BoardPassengers from "components/boardPassengers";
 import { BookingContext } from "context/bookingContext";
+import MyBookings from "components/myBookings";
 
 export default function Dashboard() {
 
@@ -12,7 +13,8 @@ export default function Dashboard() {
   const [isChecked, setIsChecked] = useState(false);
   const { broadcast, notifications } = useContext(AnnouncementContext);
   const [passengerData, setPassengerData] = useState([]);
-  const { searchPendingByFlightNumber } = useContext(BookingContext);
+  const { searchPendingByFlightNumber, searchAllByUsername, searchPendingByUsername, searchBoardedByUsername } = useContext(BookingContext);
+  const [bookingData, setBookingData] = useState([]);  
 
   const handleCheckboxChange = (e) => {
     e.preventDefault();
@@ -58,12 +60,12 @@ export default function Dashboard() {
         document.getElementById('adminSubject').value = '';
         document.getElementById('adminAnnouncement').value = '';
         document.getElementById('adminFlightNumber').value = '';
-      }).catch((err) => { 
+      }).catch((err) => {
         toast.error('Error encountered!');
         console.log(err);
       })
     }
-  }
+  };
 
   const handleBoarding = (e) => {
     e.preventDefault();
@@ -71,18 +73,99 @@ export default function Dashboard() {
     searchPendingByFlightNumber(flightNumber).then((res) => {
       console.log(res);
       setPassengerData(res);
-    }).catch((err) => { 
+    }).catch((err) => {
       toast.error('Error encountered!');
       console.log(err);
     })
+  };
 
+  const loadAllBookings = (e) => {
+    e.preventDefault();
+
+    searchAllByUsername(currentUser.username).then((res) => {
+      console.log(res);
+      setBookingData(res);
+    }).catch((err) => {
+      console.error(err);
+      toast.error('Could not load data!');
+    })
+  };
+
+  const loadPendingBookings = (e) => {
+    e.preventDefault();
+
+    searchPendingByUsername(currentUser.username).then((res) => {
+      console.log(res);
+      setBookingData(res);
+    }).catch((err) => {
+      console.error(err);
+      toast.error('Could not load data!');
+    })
+  };
+
+  const loadBoardedBookings = (e) => {
+    e.preventDefault();
+
+    searchBoardedByUsername(currentUser.username).then((res) => {
+      console.log(res);
+      setBookingData(res);
+    }).catch((err) => {
+      console.error(err);
+      toast.error('Could not load data!');
+    })
   }
 
   const CustomerDashboard = () => {
     return (
       <>
-        <div className="flex flex-wrap">
-          Customer
+      <div className="flex flex-wrap">
+        <div className="lg:w-4/12 px-4">
+          <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-200 border-0">
+            <div className="rounded-t mb-0 px-6 py-6"></div>
+              <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
+                <form onSubmit={loadAllBookings}>
+                  <button
+                  className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
+                  type="submit" >
+                    Load all bookings
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div className="lg:w-4/12 px-4">
+          <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-200 border-0">
+            <div className="rounded-t mb-0 px-6 py-6"></div>
+              <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
+                <form onSubmit={loadPendingBookings}>
+                  <button
+                  className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
+                  type="submit" >
+                    Load active bookings
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div className="lg:w-4/12 px-4">
+          <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-200 border-0">
+            <div className="rounded-t mb-0 px-6 py-6"></div>
+              <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
+                <form onSubmit={loadBoardedBookings}>
+                  <button
+                  className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
+                  type="submit" >
+                    Load boarded bookings
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="flex justify-center items-center content-center h-full">
+          <div className="lg:w-12/12 px-4">
+            <MyBookings color={'dark'} data={bookingData} />
+          </div>
         </div>
       </>
     )

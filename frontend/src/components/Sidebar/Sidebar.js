@@ -116,27 +116,29 @@ export default function Sidebar() {
                 </>
               )}
 
-              <li className="items-center">
-                <Link
-                  className={
-                    "text-xs uppercase py-3 font-bold block " +
-                    (window.location.href.indexOf("/admin/searchFlights") !== -1
-                      ? "text-lightBlue-500 hover:text-lightBlue-600"
-                      : "text-blueGray-700 hover:text-blueGray-500")
-                  }
-                  to="/admin/searchFlights"
-                >
-                  <i
+              {currentUser.role === 'customer' && (
+                <li className="items-center">
+                  <Link
                     className={
-                      "fas fa-tools mr-2 text-sm " +
+                      "text-xs uppercase py-3 font-bold block " +
                       (window.location.href.indexOf("/admin/searchFlights") !== -1
-                        ? "opacity-75"
-                        : "text-blueGray-300")
+                        ? "text-lightBlue-500 hover:text-lightBlue-600"
+                        : "text-blueGray-700 hover:text-blueGray-500")
                     }
-                  ></i>{" "}
-                  Search Flights
-                </Link>
-              </li>
+                    to="/admin/searchFlights"
+                  >
+                    <i
+                      className={
+                        "fas fa-tools mr-2 text-sm " +
+                        (window.location.href.indexOf("/admin/searchFlights") !== -1
+                          ? "opacity-75"
+                          : "text-blueGray-300")
+                      }
+                    ></i>{" "}
+                    Search Flights
+                  </Link>
+                </li>
+              )}
 
               <li className="items-center">
                 <Link

@@ -2,7 +2,6 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "context/authContext";
-import PagesDropdown from "components/Dropdowns/PagesDropdown.js";
 
 export default function Navbar(props) {
   const [navbarOpen, setNavbarOpen] = React.useState(false);
@@ -44,14 +43,16 @@ export default function Navbar(props) {
                 </a>
               </li>
 
-              <li className="flex items-center">
+              {(!currentUser || currentUser.role == "customer") && (
+                <li className="flex items-center">
                 <a
                   className="lg:text-white lg:hover:text-blueGray-200 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold"
-                  href="#"
+                  href="/admin/searchFlights"
                 >
                   <span className="inline-block ml-2">Search Flight</span>
                 </a>
               </li>
+              ) }
                 
               {currentUser ? (
                 <>
@@ -104,10 +105,6 @@ export default function Navbar(props) {
               </li>
                   </>
               )}
-              
-              <li className="flex items-center">
-                <PagesDropdown />
-              </li>
             </ul>
           </div>
         </div>

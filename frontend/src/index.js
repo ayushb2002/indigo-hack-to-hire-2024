@@ -36,7 +36,7 @@ ReactDOM.render(
                 <PrivateRoute path="/admin" component={Admin} />
                 <PrivateRoute path="/logout" component={Logout} />
               {/* add redirect for first page */}
-                <Redirect from="*" to="/" />
+                <Redirect from="*" to="/auth/login" />
             </Switch>
             </BrowserRouter>
         </BookingProvider>
