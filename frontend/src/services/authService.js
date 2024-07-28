@@ -27,6 +27,17 @@ const login = async (username, password) => {
     if (response.data.token) {
         localStorage.setItem('user', JSON.stringify(response.data));
     }
+
+    if (response.data.role === 'customer')
+        {
+            const bookings = await axios.get(`${API_URL}/bookings/by-username-all/${response.data.username}`, {}, {
+                headers: {
+                    'Authorization': `Bearer ${response.data.token}`
+                }
+            });
+            
+            localStorage.setItem('bookings', bookings.data);
+        }
     return response.data;
 };
 
@@ -39,6 +50,10 @@ const logout = () => {
 const getCurrentUser = () => {
     return JSON.parse(localStorage.getItem('user'));
 };
+
+const getCurrentUserBookings = () => {
+    return JSON.parse(localStorage.getItem('bookings'));
+}
 
 const updateRole = async (username, role, token) => {
     const response = await axios.post(`${API_URL}/auth/update-role`, {
@@ -58,5 +73,6 @@ export default {
     login,
     logout,
     getCurrentUser,
-    updateRole
+    updateRole,
+    getCurrentUserBookings
 };

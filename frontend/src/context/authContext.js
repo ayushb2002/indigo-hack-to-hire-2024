@@ -33,8 +33,7 @@ const AuthProvider = ({ children }) => {
     };
 
     const updateRole = (username, role) => {
-        const res = authService.updateRole(username, role, currentUser.token);
-        return res;
+        return authService.updateRole(username, role, currentUser.token);
     }
 
     return (

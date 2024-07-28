@@ -12,6 +12,9 @@ import Landing from "./views/Landing.js";
 import Profile from "views/Profile.js";
 
 import { AuthProvider } from "context/authContext.js";
+import { AnnouncementProvider } from "context/announcementContext.js";
+import { FlightProvider } from "context/flightContext.js";
+import { BookingProvider } from "context/bookingContext.js";
 import PrivateRoute from "components/PrivateRoute.js";
 import Logout from "components/logout.js";
 
@@ -19,20 +22,26 @@ import { Toaster } from "react-hot-toast";
 
 ReactDOM.render(
   <AuthProvider>
-    <Toaster />
-  <BrowserRouter>
-    <Switch>
-      {/* add routes with layouts */}
-        <Route path="/auth" component={Auth} />
-      {/* add routes without layouts */}
-        <Route path="/" exact component={Landing} />
-        <PrivateRoute path='/profile' component={Profile} />
-        <PrivateRoute path="/admin" component={Admin} />
-        <PrivateRoute path="/logout" component={Logout} />
-      {/* add redirect for first page */}
-        <Redirect from="*" to="/" />
-    </Switch>
-    </BrowserRouter>
-    </AuthProvider>,
+    <AnnouncementProvider>
+      <FlightProvider>
+        <BookingProvider>
+          <Toaster />
+          <BrowserRouter>
+            <Switch>
+              {/* add routes with layouts */}
+                <Route path="/auth" component={Auth} />
+              {/* add routes without layouts */}
+                <Route path="/" exact component={Landing} />
+                <PrivateRoute path='/profile' component={Profile} />
+                <PrivateRoute path="/admin" component={Admin} />
+                <PrivateRoute path="/logout" component={Logout} />
+              {/* add redirect for first page */}
+                <Redirect from="*" to="/" />
+            </Switch>
+            </BrowserRouter>
+        </BookingProvider>
+      </FlightProvider>
+    </AnnouncementProvider>
+  </AuthProvider>,
   document.getElementById("root")
 );
