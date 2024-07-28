@@ -2,14 +2,11 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "context/authContext";
-
-// components
-
 import PagesDropdown from "components/Dropdowns/PagesDropdown.js";
 
 export default function Navbar(props) {
   const [navbarOpen, setNavbarOpen] = React.useState(false);
-  const { currentUser, logout } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
 
   return (
     <>
@@ -83,6 +80,7 @@ export default function Navbar(props) {
                     </a>
                   </Link>
                 </li>
+                
                 </>
               ) : (
                 <>

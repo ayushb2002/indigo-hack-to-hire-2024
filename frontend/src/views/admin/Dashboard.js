@@ -3,12 +3,16 @@ import { Redirect } from "react-router-dom";
 import { AuthContext } from "context/authContext";
 import toast from "react-hot-toast";
 import { AnnouncementContext } from "context/announcementContext";
+import BoardPassengers from "components/boardPassengers";
+import { BookingContext } from "context/bookingContext";
 
 export default function Dashboard() {
 
   const { currentUser, updateRole } = useContext(AuthContext);
   const [isChecked, setIsChecked] = useState(false);
   const { broadcast, notifications } = useContext(AnnouncementContext);
+  const [passengerData, setPassengerData] = useState([]);
+  const { searchPendingByFlightNumber } = useContext(BookingContext);
 
   const handleCheckboxChange = (e) => {
     e.preventDefault();
@@ -61,6 +65,19 @@ export default function Dashboard() {
     }
   }
 
+  const handleBoarding = (e) => {
+    e.preventDefault();
+    const flightNumber = document.getElementById('staffFlightNumber').value;
+    searchPendingByFlightNumber(flightNumber).then((res) => {
+      console.log(res);
+      setPassengerData(res);
+    }).catch((err) => { 
+      toast.error('Error encountered!');
+      console.log(err);
+    })
+
+  }
+
   const CustomerDashboard = () => {
     return (
       <>
@@ -74,33 +91,20 @@ export default function Dashboard() {
   const StaffDashboard = () => {
     return (
       <>
-          <div className="flex flex-wrap">
-
-          <div className="lg:w-6/12 px-4">
+        <div className="flex flex-wrap">
+          
+          <div className="lg:w-4/12 px-4"></div>
+          <div className="lg:w-4/12 px-4">
             <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-200 border-0">
                 <div className="rounded-t mb-0 px-6 py-6">
                   <div className="text-center mb-3">
                     <h4 className="text-blueGray-500 text-lg font-bold">
-                      Announcements
+                      Commence Boarding
                     </h4>
                   </div>
                 </div>
                 <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
-                <form onSubmit={handleAnnouncement}>
-                
-                  <div className="relative w-full mb-3">
-                    <label
-                        className="uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="grid-password" >
-                        Broadcast {" "}
-                      </label>
-                      <input
-                        type="checkbox"
-                        className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring ease-linear transition-all duration-150"
-                      id="adminBroadcast"
-                      checked={isChecked}
-                      onChange={handleCheckboxChange}
-                    />
-                  </div>
+                <form onSubmit={handleBoarding}>
                   
                     <div className="relative w-full mb-3">
                       <label
@@ -113,34 +117,8 @@ export default function Dashboard() {
                         type="text"
                         className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                         placeholder="Flight Number"
-                      id="adminFlightNumber"
-                    disabled={isChecked}
+                        id="staffFlightNumber"
                       />
-                    </div>
-
-                    <div className="relative w-full mb-3">
-                      <label
-                        className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                        htmlFor="grid-password"
-                      >
-                        Subject
-                      </label>
-                      <input
-                        type="text"
-                        className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                        placeholder="Subject of announcement"
-                      id="adminSubject"
-                      />
-                    </div>
-
-                    <div className="relative w-full mb-3">
-                      <label
-                        className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                        htmlFor="grid-password"
-                      >
-                        Type your message here
-                      </label>
-                      <textarea className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" rows={5} id="adminAnnouncement" />
                     </div>
 
                     <div className="text-center mt-6">
@@ -148,15 +126,21 @@ export default function Dashboard() {
                         className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
                         type="submit"
                       >
-                        Send Announcement
+                        Board passengers
                       </button>
                     </div>
                   </form>
                 </div>
               </div>
           </div>
-
-          </div>
+          <div className="lg:w-4/12 px-4"></div>
+        </div>
+        
+        <div className="flex justify-center items-center content-center h-full">
+            <div className="lg: w-12/12 px-4">
+            <BoardPassengers color={'dark'} data={passengerData} />
+            </div>
+        </div>
       </>
     )
   };

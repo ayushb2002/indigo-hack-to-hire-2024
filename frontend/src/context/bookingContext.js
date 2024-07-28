@@ -26,6 +26,10 @@ const BookingProvider = ({ children }) => {
         return bookingService.searchPendingByFlightNumber(flight_number, currentUser.token);
     };
 
+    const searchBoardedByFlightNumber = (flight_number) => {
+        return bookingService.searchBoardedByFlightNumber(flight_number, currentUser.token);
+    };
+
     const searchAllByUsername = (username) => {
         return bookingService.searchAllByUsername(username, currentUser.token);
     };
@@ -34,12 +38,20 @@ const BookingProvider = ({ children }) => {
         return bookingService.searchPendingByUsername(username, currentUser.token);
     };
 
+    const searchBoardedByUsername = (username) => {
+        return bookingService.searchBoardedByUsername(username, currentUser.token);
+    };
+
     const updateStatus = (booking_id) => {
         return bookingService.updateStatus(booking_id, currentUser.token);
     }
 
+    const cancelBooking = (booking_id) => {
+        return bookingService.cancelBooking(booking_id, currentUser.token);
+    }
+
     return (
-        <BookingContext.Provider value={{ currentUser, createBooking, searchAllByFlightNumber, searchAllByUsername, searchPendingByFlightNumber, searchPendingByUsername, updateStatus }}>
+        <BookingContext.Provider value={{ currentUser, createBooking, searchAllByFlightNumber, searchAllByUsername, searchPendingByFlightNumber, searchPendingByUsername, updateStatus, searchBoardedByFlightNumber, searchBoardedByUsername, cancelBooking }}>
             {children}
         </BookingContext.Provider>
     );

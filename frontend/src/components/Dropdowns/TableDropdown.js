@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import { createPopper } from "@popperjs/core";
+import { BookingContext } from "context/bookingContext";
+import toast from "react-hot-toast";
 
-const NotificationDropdown = () => {
+const NotificationDropdown = ({ bookingId }) => {
   // dropdown props
   const [dropdownPopoverShow, setDropdownPopoverShow] = React.useState(false);
   const btnDropdownRef = React.createRef();
   const popoverDropdownRef = React.createRef();
+  const { updateStatus, cancelBooking } = useContext(BookingContext);
   const openDropdownPopover = () => {
     createPopper(btnDropdownRef.current, popoverDropdownRef.current, {
       placement: "left-start",
@@ -15,6 +18,31 @@ const NotificationDropdown = () => {
   const closeDropdownPopover = () => {
     setDropdownPopoverShow(false);
   };
+
+  const updateStatusToBoarded = (e) => {
+    e.preventDefault();
+    updateStatus(bookingId).then((res) => {
+      toast.success(res.message);
+      console.log(res);
+      window.location.href = "/admin";
+    }).catch(err => {
+      console.error(err);
+      toast.error("Cannot update status!");
+    })
+  }
+
+  const updateStatusToCancelled = (e) => {
+    e.preventDefault();
+    cancelBooking(bookingId).then((res) => {
+      toast.success(res.message);
+      console.log(res);
+      window.location.href = "/admin";
+    }).catch(err => {
+      console.error(err);
+      toast.error("Cannot update status!");
+    })
+  }
+
   return (
     <>
       <a
@@ -40,27 +68,18 @@ const NotificationDropdown = () => {
           className={
             "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
           }
-          onClick={(e) => e.preventDefault()}
+          onClick={updateStatusToBoarded}
         >
-          Action
+          Boarded Successfully
         </a>
         <a
           href="#pablo"
           className={
             "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
           }
-          onClick={(e) => e.preventDefault()}
+          onClick={updateStatusToCancelled}
         >
-          Another action
-        </a>
-        <a
-          href="#pablo"
-          className={
-            "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
-          }
-          onClick={(e) => e.preventDefault()}
-        >
-          Something else here
+          Cancel boarding
         </a>
       </div>
     </>

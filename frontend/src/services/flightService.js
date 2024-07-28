@@ -23,19 +23,19 @@ const search_by_departure = async (departure) => {
     return res.data;
 }
 
-const search_by_destination = async (destination) => {
+const search_by_arrival = async (destination) => {
     const res = await axios.get(`${API_URL}/flights/search_by_arrival/${destination}`);
     return res.data;
 }
 
 const search_by_flight_number = async (flight_number) => {
-    const res = await axios.get(`${API_URL}/flights/search_by_arrival/${flight_number}`);
+    const res = await axios.get(`${API_URL}/flights/search_by_flight_number/${flight_number}`);
     return res.data;
 }
 
 export default {
     createFlight,
     search_by_departure,
-    search_by_destination,
+    search_by_arrival,
     search_by_flight_number
 }

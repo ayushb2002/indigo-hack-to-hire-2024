@@ -40,8 +40,24 @@ const searchAllByUsername = async (username, token) => {
     return res.data;
 };
 
+const searchBoardedByFlightNumber = async (flight_number, token) => {
+    const res = await axios.get(`${API_URL}/bookings/by-flight-boarded/${flight_number}`, {}, {
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    return res.data;
+};
+
 const searchPendingByUsername = async (username, token) => {
     const res = await axios.get(`${API_URL}/bookings/by-username-pending/${username}`, {}, {
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    return res.data;
+};
+
+const searchBoardedByUsername = async (username, token) => {
+    const res = await axios.get(`${API_URL}/bookings/by-username-boarded/${username}`, {}, {
         headers: { 'Authorization': `Bearer ${token}` }
     });
 
@@ -60,11 +76,26 @@ const updateStatus = async (booking_id, token) => {
     return res.data;
 }
 
+const cancelBooking = async (booking_id, token) => {
+    const res = await axios.post(`${API_URL}/bookings/cancel-booking`, {
+        'booking_id': booking_id
+    }, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    return res.data;
+}
+
 export default {
     createBooking,
     searchAllByFlightNumber,
     searchAllByUsername,
     searchPendingByFlightNumber,
     searchPendingByUsername,
-    updateStatus
+    updateStatus,
+    searchBoardedByFlightNumber,
+    searchBoardedByUsername,
+    cancelBooking
 };

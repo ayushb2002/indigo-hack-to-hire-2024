@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { createPopper } from "@popperjs/core";
 import { Link } from "react-router-dom";
 
 const UserDropdown = () => {
   // dropdown props
   const [dropdownPopoverShow, setDropdownPopoverShow] = React.useState(false);
+  const [imgSrc, setImgSrc] = useState('');
   const btnDropdownRef = React.createRef();
   const popoverDropdownRef = React.createRef();
   const openDropdownPopover = () => {
@@ -16,6 +17,15 @@ const UserDropdown = () => {
   const closeDropdownPopover = () => {
     setDropdownPopoverShow(false);
   };
+
+  useEffect(() => {
+    const img = new Image();
+    img.src = "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png";
+    img.onload = () => {
+      setImgSrc(img.src);
+    }
+  })
+
   return (
     <>
       <a
@@ -32,7 +42,7 @@ const UserDropdown = () => {
             <img
               alt="..."
               className="w-full rounded-full align-middle border-none shadow-lg"
-              src={require("assets/img/team-1-800x800.jpg").default}
+              src={imgSrc}
             />
           </span>
         </div>
