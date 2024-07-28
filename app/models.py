@@ -84,8 +84,8 @@ def create_booking(db, username, flight_number, seat_number, booking_status):
         raise ValueError("Flight is not active")
 
     booking = {
-        'username': user['_id'],
-        'flight_id': flight['_id'],
+        'username': user,
+        'flight_id': flight,
         'seat_number': seat_number,
         'booking_status': booking_status
     }
@@ -112,33 +112,50 @@ def is_seat_booked(db, flight_number, seat_number):
     return booking is not None
 
 def search_by_flight_number(db, flight_number, option):
+    flight = find_flight_by_number(db, flight_number)
     if option == 'all':
-        bookings = list(db.bookings.find({'flight_number': flight_number}))
+        bookings = list(db.bookings.find({'flight_id': flight}))
+        for booking in bookings:
+            booking['_id'] = str(booking['_id'])
+    elif option == 'confirmed':
+        bookings = list(db.bookings.find({'flight_id': flight, 'booking_status': {'$eq': 'confirmed'}}))
         for booking in bookings:
             booking['_id'] = str(booking['_id'])
     else:
-        bookings = list(db.bookings.find({'flight_number': flight_number, 'booking_status': {'$ne': 'boarded'}}))
+        bookings = list(db.bookings.find({'flight_id': flight, 'booking_status': {'$eq': 'boarded'}}))
         for booking in bookings:
             booking['_id'] = str(booking['_id'])
-        
     return bookings
 
 def search_by_username(db, username, option):
+    user = find_user_by_username(db, username)
     if option == 'all':
-        bookings = list(db.bookings.find({'username': username}))
+        bookings = list(db.bookings.find({'username': user}))
+        for booking in bookings:
+            booking['_id'] = str(booking['_id'])
+    elif option == 'pending':
+        bookings = list(db.bookings.find({'username': user, 'booking_status': {'$eq': 'confirmed'}}))
         for booking in bookings:
             booking['_id'] = str(booking['_id'])
     else:
-        bookings = list(db.bookings.find({'username': username, 'booking_status': {'$ne': 'boarded'}}))
+        bookings = list(db.bookings.find({'username': user, 'booking_status': {'$eq': 'boarded'}}))
         for booking in bookings:
             booking['_id'] = str(booking['_id'])
     
     return bookings
 
-def update_booking_status(db, booking_id):
+def handle_update_booking_status(db, booking_id):
     result = db.bookings.update_one(
         {'_id': ObjectId(booking_id)},
         {'$set': {'booking_status': 'boarded'}}
+    )
+    
+    return result
+
+def handle_cancel_booking(db, booking_id):
+    result = db.bookings.update_one(
+        {'_id': ObjectId(booking_id)},
+        {'$set': {'booking_status': 'cancelled'}}
     )
     
     return result

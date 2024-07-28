@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify, current_app
 from models import create_flight, find_flights_by_departure, find_flights_by_arrival, find_flight_by_number, deactivate_flight
 from decorators import token_required, admin_or_staff_required
+from bson import json_util
 
 flights_bp = Blueprint('flights', __name__)
 
@@ -20,8 +21,12 @@ def create(current_user):
 def search_by_departure(departure):
     db = current_app.db
     flights = find_flights_by_departure(db, departure)
-    if flights['active']:
-        return jsonify({'flights': flights}), 200
+    if flights:
+        filter_flights = []
+        for flight in flights:
+            if flight['active']:
+                filter_flights.append(flight)
+        return jsonify({'flights': json_util.dumps(filter_flights)}), 200
     else:
         return jsonify({"message": "No active flights found!"}), 404
 
@@ -29,18 +34,22 @@ def search_by_departure(departure):
 def search_by_arrival(arrival):
     db = current_app.db
     flights = find_flights_by_arrival(db, arrival)
-    if flights['active']:
-        return jsonify({'flights': flights}), 200
+    if flights:
+        filter_flights = []
+        for flight in flights:
+            if flight['active']:
+                filter_flights.append(flight)
+        return jsonify({'flights': json_util.dumps(filter_flights)}), 200
     else:
         return jsonify({"message": "No active flights found!"}), 404
 
-@flights_bp.route('/search_by_number/<flight_number>', methods=['GET'])
+@flights_bp.route('/search_by_flight_number/<flight_number>', methods=['GET'])
 def search_by_number(flight_number):
     db = current_app.db
     flight = find_flight_by_number(db, flight_number)
     if flight:
         if flight['active']:
-            return jsonify({'flights': flight}), 200
+            return jsonify({'flights': json_util.dumps(flight)}), 200
         else:
             return jsonify({"message": "No active flights found!"}), 404
     else:
@@ -48,9 +57,10 @@ def search_by_number(flight_number):
 
 @token_required
 @admin_or_staff_required
-@flights_bp.route('/deactivate/<flight_number>', methods=['PUT'])
-def deactivate(current_user, flight_number):
+@flights_bp.route('/deactivate', methods=['POST'])
+def deactivate(current_user):
+    data = request.get_json()
     db = current_app.db
-    if deactivate_flight(db, flight_number):
+    if deactivate_flight(db, data['flight_number']):
         return jsonify({'message': 'Flight bookings closed successfully'}), 200
     return jsonify({'error': 'Flight not found'}), 404
