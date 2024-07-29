@@ -16,3 +16,13 @@
 > cd frontend <br>
 > npm install <br>
 > npm start <br>
+
+### Environment variables required for flask application - <br>
+> MONGO_PWD <br>
+> MONGO_UID <br>
+> SECRET_KEY <br>
+
+### Environment variables required for frontend - <br>
+> REACT_APP_EMAILJS_PUBLIC_KEY <br>
+> REACT_APP_EMAILJS_TEMPLATE_ID <br>
+> REACT_APP_EMAILJS_SERVICE_ID <br>
