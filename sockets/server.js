@@ -20,31 +20,68 @@ app.use(cors({
 }));
 
 const kafkaClient = new kafka.KafkaClient({ kafkaHost: 'localhost:9092' });
-
 const consumer = new kafka.Consumer(
     kafkaClient,
     [
-        { topic: 'notifications', partitions: 0 },
-        { topic: 'broadcasts', partitions: 0 }
+        { topic: 'notifications', partitions: [0, 1, 2] },
+        { topic: 'broadcasts', partitions: [0, 1, 2] }
     ],
     {
-        autoCommit: true,
-        fromOffset: 'latest'
+        autoCommit: true
     }
 );
 
+const cachedMessages = {
+    notifications: [],
+    broadcasts: []
+};
+
+// Read existing messages from Kafka topics and cache them
+const loadCachedMessages = () => {
+    return new Promise((resolve, reject) => {
+        // Retrieve the latest offset for each topic
+        const offset = new kafka.Offset(kafkaClient);
+
+        offset.fetch([{ topic: 'notifications', partitions: [0, 1, 2] }, { topic: 'broadcasts', partitions: [0, 1, 2] }], (err, data) => {
+            if (err) return reject(err);
+            const notificationsOffset = data['notifications'][0][0];
+            const broadcastsOffset = data['broadcasts'][0][0];
+
+            consumer.setOffset('notifications', 0, notificationsOffset);
+            consumer.setOffset('broadcasts', 0, broadcastsOffset);
+
+            consumer.on('message', (message) => {
+                const topic = message.topic;
+                const data = JSON.parse(message.value);
+
+                if (topic === 'notifications') {
+                    cachedMessages.notifications.push(data);
+                } else if (topic === 'broadcasts') {
+                    cachedMessages.broadcasts.push(data);
+                }
+            });
+
+            resolve();
+        });
+    });
+};
+
+// Handle new socket connections
 io.on('connection', (socket) => {
     console.log('New client connected');
 
+    // Send cached messages to the new client
+    socket.emit('cachedNotifications', cachedMessages.notifications);
+    socket.emit('cachedBroadcasts', cachedMessages.broadcasts);
+
+    // Handle real-time messages
     consumer.on('message', (message) => {
         const data = JSON.parse(message.value);
         const topic = message.topic;
         console.log(data, topic);
         if (topic === 'notifications') {
-            // Emit the notification to the relevant clients
             socket.emit('notification', data);
         } else if (topic === 'broadcasts') {
-            // Emit the broadcast to all connected clients
             io.emit('broadcast', data);
         }
     });
@@ -54,6 +91,11 @@ io.on('connection', (socket) => {
     });
 });
 
-server.listen(4000, () => {
-    console.log('Server is running on http://localhost:4000');
+// Initialize cached messages and start the server
+loadCachedMessages().then(() => {
+    server.listen(4000, () => {
+        console.log('Server is running on http://localhost:4000');
+    });
+}).catch(err => {
+    console.error('Error loading cached messages:', err);
 });
