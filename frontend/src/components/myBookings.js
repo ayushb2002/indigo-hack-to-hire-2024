@@ -1,7 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
+import NotificationHandler from "realTimeHandlers/notificationHandler";
 
 export default function MyBookings({ color, data }) {
+  const [flightNumberStore, setFlightNumberStore] = useState([]);
+
+  useEffect(() => {
+    const flightNumbers = [];
+    if (data) {
+      data.forEach(item => {
+        flightNumbers.push(item.flight_id.flight_number);
+      });
+      setFlightNumberStore(flightNumbers);
+    }
+  }, [data]); 
+
   return (
     <>
       <div
@@ -90,34 +103,33 @@ export default function MyBookings({ color, data }) {
               </tr>
             </thead>
             <tbody>
-            {data && data.map(items => {
-                return (
-                            <tr key={items._id}>
-                                <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center">
-                                    {items.flight_id.flight_number}
-                                </th>
-                                <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center">
-                                    {items.flight_id.departure} | {items.flight_id.departure_time}
-                                </th>
-                                <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center">
-                                    {items.flight_id.destination} | {items.flight_id.arrival_time}
-                                </th>
-                                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center">
-                                    {items.seat_number}
-                                </td>
-                                <td className="uppercase border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center">
-                                    {items.booking_status}
-                                </td>
-                                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center">
-                                    Check Updates
-                                </td>
-                            </tr>
-                    )
-            })}
+              {data && data.map(items => (
+                <tr key={items._id}>
+                  <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center">
+                    {items.flight_id.flight_number}
+                  </th>
+                  <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center">
+                    {items.flight_id.departure} | {items.flight_id.departure_time}
+                  </th>
+                  <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center">
+                    {items.flight_id.destination} | {items.flight_id.arrival_time}
+                  </th>
+                  <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center">
+                    {items.seat_number}
+                  </td>
+                  <td className="uppercase border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center">
+                    {items.booking_status}
+                  </td>
+                  <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center">
+                    Check Updates
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
       </div>
+      <NotificationHandler flightNumberData={flightNumberStore} />
     </>
   );
 }

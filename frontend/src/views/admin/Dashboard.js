@@ -85,6 +85,7 @@ export default function Dashboard() {
     searchAllByUsername(currentUser.username).then((res) => {
       console.log(res);
       setBookingData(res);
+      toast.success("Loaded all booking!");
     }).catch((err) => {
       console.error(err);
       toast.error('Could not load data!');
@@ -97,6 +98,7 @@ export default function Dashboard() {
     searchPendingByUsername(currentUser.username).then((res) => {
       console.log(res);
       setBookingData(res);
+      toast.success("Loaded active bookings!");
     }).catch((err) => {
       console.error(err);
       toast.error('Could not load data!');
@@ -109,6 +111,7 @@ export default function Dashboard() {
     searchBoardedByUsername(currentUser.username).then((res) => {
       console.log(res);
       setBookingData(res);
+      toast.success("Loaded past bookings!");
     }).catch((err) => {
       console.error(err);
       toast.error('Could not load data!');

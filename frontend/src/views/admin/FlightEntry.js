@@ -79,7 +79,7 @@ export default function FlightEntry() {
                         className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                         htmlFor="grid-password"
                       >
-                        Departure
+                        Arrival
                       </label>
                       <input
                         type="text"
@@ -94,7 +94,7 @@ export default function FlightEntry() {
                         className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                         htmlFor="grid-password"
                       >
-                        Arrival
+                        Departure
                       </label>
                       <input
                         type="text"

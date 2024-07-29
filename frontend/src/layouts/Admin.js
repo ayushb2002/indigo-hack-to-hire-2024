@@ -11,6 +11,7 @@ import Logout from "components/logout.js";
 import Profile from "views/Profile";
 import FlightEntry from "views/admin/FlightEntry";
 import SearchFlights from "views/admin/SearchFlights";
+import BroadcastHandler from "realTimeHandlers/broadcastHandler";
 
 export default function Admin() {
   return (
@@ -26,6 +27,7 @@ export default function Admin() {
             <PrivateRoute path="/admin/flightEntry" component={FlightEntry} />
             <PrivateRoute path="/admin/settings" component={Settings} />
             <PrivateRoute path='/admin/searchFlights' component={SearchFlights} />
+            <PrivateRoute path="/admin/broadcast" component={BroadcastHandler} />
             <PrivateRoute path='/profile' component={Profile} />
             <PrivateRoute path="/logout" component={Logout} />
 
