@@ -104,7 +104,7 @@ export default function Sidebar() {
                   >
                     <i
                       className={
-                        "fas fa-tools mr-2 text-sm " +
+                        "fas fa-server mr-2 text-sm " +
                         (window.location.href.indexOf("/admin/flightEntry") !== -1
                           ? "opacity-75"
                           : "text-blueGray-300")
@@ -129,7 +129,7 @@ export default function Sidebar() {
                   >
                     <i
                       className={
-                        "fas fa-tools mr-2 text-sm " +
+                        "fas fa-plane-departure mr-2 text-sm " +
                         (window.location.href.indexOf("/admin/searchFlights") !== -1
                           ? "opacity-75"
                           : "text-blueGray-300")
@@ -152,7 +152,7 @@ export default function Sidebar() {
                 >
                   <i
                     className={
-                      "fas fa-tools mr-2 text-sm " +
+                      "fas fa-podcast mr-2 text-sm " +
                       (window.location.href.indexOf("/admin/broadcast") !== -1
                         ? "opacity-75"
                         : "text-blueGray-300")

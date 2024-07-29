@@ -6,6 +6,7 @@ import { AnnouncementContext } from "context/announcementContext";
 import BoardPassengers from "components/boardPassengers";
 import { BookingContext } from "context/bookingContext";
 import MyBookings from "components/myBookings";
+import emailjs from '@emailjs/browser';
 
 export default function Dashboard() {
 
@@ -57,6 +58,7 @@ export default function Dashboard() {
       const flightNumber = document.getElementById('adminFlightNumber').value;
       notifications(flightNumber, subject, announcement).then((res) => {
         toast.success(res.message);
+        sendNotificationEmail(flightNumber, subject, announcement);
         document.getElementById('adminSubject').value = '';
         document.getElementById('adminAnnouncement').value = '';
         document.getElementById('adminFlightNumber').value = '';
@@ -64,6 +66,32 @@ export default function Dashboard() {
         toast.error('Error encountered!');
         console.log(err);
       })
+    }
+  };
+
+  const sendNotificationEmail = async (flightNumber, subject, message) => {
+    try {
+      const res = await searchPendingByFlightNumber(flightNumber);
+      const emailList = res.map(resItems => resItems.username.email);
+      console.log(emailList);
+      const emailPromises =  emailList.map(async (email) => {
+          await emailjs.send(
+          process.env.REACT_APP_EMAILJS_SERVICE_ID,
+          process.env.REACT_APP_EMAILJS_TEMPLATE_ID,
+          {
+            "subject": subject,
+            "message": message,
+            "to_email": email
+          },
+          process.env.REACT_APP_EMAILJS_PUBLIC_KEY
+        )}
+      );
+  
+      await Promise.all(emailPromises);
+      toast.success('Emails sent successfully!');
+    } catch (err) {
+      console.error(err);
+      toast.error('Could not email notification!');
     }
   };
 
@@ -269,7 +297,7 @@ export default function Dashboard() {
                       Role
                     </label>
                     <select className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" id="adminRole">
-                        <option value="" disabled>Select Role</option>
+                        <option value="" disabled selected>Select Role</option>
                         <option value="staff">Staff</option>
                         <option value="admin">Admin</option>
                     </select>
