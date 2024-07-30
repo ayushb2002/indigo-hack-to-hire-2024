@@ -11,6 +11,7 @@ import Profile from "views/Profile";
 import FlightEntry from "views/admin/FlightEntry";
 import SearchFlights from "views/admin/SearchFlights";
 import BroadcastHandler from "realTimeHandlers/broadcastHandler";
+import HeaderStats from "components/Headers/HeaderStats";
 
 export default function Admin() {
   return (
@@ -18,6 +19,8 @@ export default function Admin() {
       <Sidebar />
       <div className="relative md:ml-64 bg-blueGray-100">
         <AdminNavbar />
+        {/* Header added */}
+        <HeaderStats />
         <div className="px-4 md:px-10 mx-auto w-full -m-24">
           <Switch>
             <PrivateRoute path="/admin/dashboard" component={Dashboard} />
