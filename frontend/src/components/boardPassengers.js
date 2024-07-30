@@ -111,7 +111,7 @@ export default function BoardPassengers({ color, data }) {
                                   {items.booking_status}
                                 </td>
                                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center">
-                                  <TableDropdown bookingId={items._id} />
+                                  <TableDropdown bookingId={items._id} userEmail={items.username.email} flightNumber={items.flight_id.flight_number} />
                                 </td>
                               </tr>
                     )

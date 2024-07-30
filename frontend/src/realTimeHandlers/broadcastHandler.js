@@ -101,10 +101,10 @@ const BroadcastHandler = ({ color }) => {
                                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center">
                                     {new Date(broadcastItem.timestamp).toLocaleString()}
                                 </td>
-                                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center">
+                                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-normal break-words p-4 text-center">
                                     {broadcastItem.subject}
                                 </td>
-                                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center">
+                                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-normal break-words p-4 text-center">
                                     {broadcastItem.message}
                                 </td>
                             </tr>
