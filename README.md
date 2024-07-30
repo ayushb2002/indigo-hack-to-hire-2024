@@ -78,6 +78,12 @@ This project aims to develop a comprehensive and secure airport system designed 
      ```sh
      pip install -r requirements.txt
      ```
+   - Set up environment variables in `.env` file:
+     ```
+     SECRET_KEY=your_secret_key
+     MONGO_UID=your_mongodb_user_id
+     MONGO_PWD=your_mongodb_password
+     ```
 
 3. **Frontend Setup**:
    - Navigate to the frontend directory:
