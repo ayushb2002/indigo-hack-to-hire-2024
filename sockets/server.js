@@ -26,9 +26,7 @@ const consumer = new kafka.Consumer(
         { topic: 'notifications', partitions: [0, 1, 2] },
         { topic: 'broadcasts', partitions: [0, 1, 2] }
     ],
-    {
-        autoCommit: true
-    }
+    { autoCommit: true }
 );
 
 const cachedMessages = {
@@ -42,8 +40,12 @@ const loadCachedMessages = () => {
         // Retrieve the latest offset for each topic
         const offset = new kafka.Offset(kafkaClient);
 
-        offset.fetch([{ topic: 'notifications', partitions: [0, 1, 2] }, { topic: 'broadcasts', partitions: [0, 1, 2] }], (err, data) => {
+        offset.fetch([
+            { topic: 'notifications', partitions: [0, 1, 2] },
+            { topic: 'broadcasts', partitions: [0, 1, 2] }
+        ], (err, data) => {
             if (err) return reject(err);
+
             const notificationsOffset = data['notifications'][0][0];
             const broadcastsOffset = data['broadcasts'][0][0];
 
@@ -66,25 +68,31 @@ const loadCachedMessages = () => {
     });
 };
 
+// Emit cached messages to a newly connected client
+const sendCachedMessages = (socket) => {
+    socket.emit('cachedNotifications', cachedMessages.notifications);
+    socket.emit('cachedBroadcasts', cachedMessages.broadcasts);
+};
+
+// Handle real-time messages from Kafka
+consumer.on('message', (message) => {
+    const data = JSON.parse(message.value);
+    const topic = message.topic;
+    console.log(data, topic);
+
+    if (topic === 'notifications') {
+        cachedMessages.notifications.push(data);
+        io.emit('notification', data); // Emit to all clients
+    } else if (topic === 'broadcasts') {
+        cachedMessages.broadcasts.push(data);
+        io.emit('broadcast', data); // Emit to all clients
+    }
+});
+
 // Handle new socket connections
 io.on('connection', (socket) => {
     console.log('New client connected');
-
-    // Send cached messages to the new client
-    socket.emit('cachedNotifications', cachedMessages.notifications);
-    socket.emit('cachedBroadcasts', cachedMessages.broadcasts);
-
-    // Handle real-time messages
-    consumer.on('message', (message) => {
-        const data = JSON.parse(message.value);
-        const topic = message.topic;
-        console.log(data, topic);
-        if (topic === 'notifications') {
-            socket.emit('notification', data);
-        } else if (topic === 'broadcasts') {
-            io.emit('broadcast', data);
-        }
-    });
+    sendCachedMessages(socket);
 
     socket.on('disconnect', () => {
         console.log('Client disconnected');

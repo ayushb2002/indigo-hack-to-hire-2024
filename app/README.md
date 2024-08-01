@@ -5,7 +5,7 @@ C:\kafka> .\bin\windows\kafka-server-start.bat .\config\server.properties <br>
 
 # Commands to create a topic on Kafka
 <br>
-C:\kafka\bin\windows> kafka-topics.bat --create --bootstrap-server localhost:9092 --replication-factor 1 --partition 1 --topic test <br>
+C:\kafka\bin\windows> kafka-topics.bat --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic test <br>
 
 # Command to delete a topic from Kafka
 <br>
