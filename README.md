@@ -16,6 +16,7 @@ View here - https://youtu.be/asrObO1Az9E
 - **Real-Time Updates**: Apache Kafka
 - **Socket Server**: Node.js with Socket.io
 - **Email Notifications**: EmailJS
+- **Weather Updates**: WeatherAPI
 - **Styling**: Tailwind CSS
 
 ## Features
@@ -52,6 +53,9 @@ View here - https://youtu.be/asrObO1Az9E
 
 ### Email Notifications
 - **EmailJS Integration**: Sends emails to multiple recipients with flight-related updates. Email template variables include subject and message, dynamically populated from the backend.
+
+### Weather Updates
+- **Weather forecast display**: Display the weather forecast for today and tomorrow for either arrival or departure city. Connects to weatherapi.com and sends get requests to forecast routes. 
 
 ### UI/UX Enhancements
 - **Dynamic Tables**: Data tables in the frontend are designed to handle large amounts of text, ensuring readability with proper text wrapping.
@@ -104,6 +108,7 @@ View here - https://youtu.be/asrObO1Az9E
      REACT_APP_EMAILJS_SERVICE_ID=your_service_id
      REACT_APP_EMAILJS_TEMPLATE_ID=your_template_id
      REACT_APP_EMAILJS_PUBLIC_KEY=your_public_key
+     REACT_APP_WEATHER_API_KEY=your_api_key
      ```
 
 4. **Socket Server Setup**:
