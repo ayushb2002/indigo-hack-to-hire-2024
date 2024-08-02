@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import NotificationHandler from "realTimeHandlers/notificationHandler";
+import axios from "axios";
+import WeatherCard from "./weatherCard";
 
 export default function MyBookings({ color, data }) {
   const [flightNumberStore, setFlightNumberStore] = useState([]);
+  const [weatherData, setWeatherData] = useState({});
 
   useEffect(() => {
     const flightNumbers = [];
@@ -14,6 +17,43 @@ export default function MyBookings({ color, data }) {
       setFlightNumberStore(flightNumbers);
     }
   }, [data]); 
+
+  const loadWeatherReport = async (city) => {
+    try {
+      let url = `http://api.weatherapi.com/v1/forecast.json?key=${process.env.REACT_APP_WEATHER_API_KEY}&q=${city}&days=2`;
+      const response = await axios.get(url);
+      const res = response["data"];
+      var requiredData = {
+        "city": city,
+        "today": {
+          "date": res["forecast"]["forecastday"][0]["date"],
+          "maxtemp_c": res["forecast"]["forecastday"][0]["day"]["maxtemp_c"],
+          "mintemp_c": res["forecast"]["forecastday"][0]["day"]["mintemp_c"],
+          "maxwind_kph": res["forecast"]["forecastday"][0]["day"]["mintemp_c"],
+          "condition": res["forecast"]["forecastday"][0]["day"]["condition"]["text"],
+          "icon": res["forecast"]["forecastday"][0]["day"]["condition"]["icon"],
+          "total_precipitation_mm": res["forecast"]["forecastday"][0]["day"]["totalprecip_mm"],
+          "humidity": res["forecast"]["forecastday"][0]["day"]["avghumidity"]
+        },
+        "tomorrow": {
+          "date": res["forecast"]["forecastday"][1]["date"],
+          "maxtemp_c": res["forecast"]["forecastday"][1]["day"]["maxtemp_c"],
+          "mintemp_c": res["forecast"]["forecastday"][1]["day"]["mintemp_c"],
+          "maxwind_kph": res["forecast"]["forecastday"][1]["day"]["mintemp_c"],
+          "condition": res["forecast"]["forecastday"][1]["day"]["condition"]["text"],
+          "icon": res["forecast"]["forecastday"][1]["day"]["condition"]["icon"],
+          "total_precipitation_mm": res["forecast"]["forecastday"][1]["day"]["totalprecip_mm"],
+          "humidity": res["forecast"]["forecastday"][1]["day"]["avghumidity"]
+        }
+      }
+
+      setWeatherData(requiredData); 
+      console.log(requiredData);
+    }
+    catch (err){
+      console.error(err);
+    }
+  };
 
   return (
     <>
@@ -95,30 +135,47 @@ export default function MyBookings({ color, data }) {
               </tr>
             </thead>
             <tbody>
-              {data && data.map(items => (
-                <tr key={items._id}>
+            {data && data.map(items => (
+              <tr key={items._id}>
                   <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center">
-                    {items.flight_id.flight_number}
+                      {items.flight_id.flight_number}
                   </th>
                   <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center">
-                    {items.flight_id.departure} | {items.flight_id.departure_time}
+                      <a href="#pablo" onClick={(e) => {
+                          e.preventDefault();
+                          loadWeatherReport(items.flight_id.departure);
+                      }}>
+                          {items.flight_id.departure} | {items.flight_id.departure_time}
+                      </a>
                   </th>
                   <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center">
-                    {items.flight_id.destination} | {items.flight_id.arrival_time}
+                      <a href="#pablo" onClick={(e) => {
+                          e.preventDefault();
+                          loadWeatherReport(items.flight_id.destination);
+                      }}>
+                          {items.flight_id.destination} | {items.flight_id.arrival_time}
+                      </a>
                   </th>
                   <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center">
-                    {items.seat_number}
+                      {items.seat_number}
                   </td>
                   <td className="uppercase border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center">
-                    {items.booking_status}
+                      {items.booking_status}
                   </td>
-                </tr>
-              ))}
+              </tr>
+            ))}
+
             </tbody>
           </table>
         </div>
       </div>
-      <NotificationHandler flightNumberData={flightNumberStore} />
+      {Object.keys(flightNumberStore).length !== 0 && (
+        <NotificationHandler flightNumberData={flightNumberStore} />
+      )}
+
+      {Object.keys(weatherData).length!==0 && (
+        <WeatherCard city={weatherData.city} todayForecast={weatherData.today} tomorrowForecast={weatherData.tomorrow} />
+      )}
     </>
   );
 }

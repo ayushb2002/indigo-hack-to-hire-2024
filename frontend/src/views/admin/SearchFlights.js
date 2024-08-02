@@ -19,6 +19,8 @@ export default function SearchFlights() {
 
         if (flightNumber.value !== '')
         {
+          setArrivalResult([]);
+          setDepartureResult([]);
             search_by_flight_number(flightNumber.value).then((res) => {
                 res = JSON.parse(res['flights']);
                 setFlightNumberResult(res);
@@ -29,6 +31,8 @@ export default function SearchFlights() {
 
         if (arrival.value !== '')
         {
+          setFlightNumberResult([]);
+          setDepartureResult([]);
             search_by_arrival(arrival.value).then((res) => {
                 res = JSON.parse(res['flights']);
                 setArrivalResult(res);
@@ -39,6 +43,8 @@ export default function SearchFlights() {
 
         if (departure.value !== '')
         {
+          setFlightNumberResult([]);
+          setArrivalResult([]);
                 search_by_departure(departure.value).then((res) => {
                     res = JSON.parse(res['flights']);
                     setDepartureResult(res);
