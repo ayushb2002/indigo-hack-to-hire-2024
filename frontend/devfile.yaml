@@ -17,6 +17,15 @@ components:
       volumeMounts:
         - name: m2
           path: /home/user/.npm
+      env:
+        - name: REACT_APP_EMAILJS_PUBLIC_KEY
+          value: fun5hDJ7KAhT42a8x
+        - name: REACT_APP_EMAILJS_TEMPLATE_ID
+          value: template_jvtzmve
+        - name: REACT_APP_EMAILJS_SERVICE_ID
+          value: service_oh4ivcg
+        - name: REACT_APP_WEATHER_API_KEY
+          value: 72d17fe16de249f79e991557240208
     name: tools
   - name: m2
     volume:

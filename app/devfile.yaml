@@ -18,6 +18,11 @@ components:
       volumeMounts:
         - name: venv
           path: /home/user/.venv
+      env: 
+        - name: MONGO_URL
+          value: mongodb://mongo:password@sampledb
+        - name: SECRET_KEY
+          value: secret_key
     name: python
   - name: venv
     volume:
