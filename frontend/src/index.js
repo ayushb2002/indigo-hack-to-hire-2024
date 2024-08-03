@@ -19,6 +19,7 @@ import PrivateRoute from "components/PrivateRoute.js";
 import Logout from "components/logout.js";
 
 import { Toaster } from "react-hot-toast";
+import Search from "views/Search.js";
 
 ReactDOM.render(
   <AuthProvider>
@@ -29,7 +30,8 @@ ReactDOM.render(
           <BrowserRouter>
             <Switch>
               {/* add routes with layouts */}
-                <Route path="/auth" component={Auth} />
+              <Route path="/auth" component={Auth} />
+              <Route path="/search" component={Search} />
               {/* add routes without layouts */}
                 <Route path="/" exact component={Landing} />
                 <PrivateRoute path='/profile' component={Profile} />

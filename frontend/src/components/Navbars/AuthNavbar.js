@@ -47,7 +47,7 @@ export default function Navbar(props) {
                 <li className="flex items-center">
                 <a
                   className="lg:text-white lg:hover:text-blueGray-200 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold"
-                  href="/admin/searchFlights"
+                  href="/search"
                 >
                   <span className="inline-block ml-2">Search Flight</span>
                 </a>

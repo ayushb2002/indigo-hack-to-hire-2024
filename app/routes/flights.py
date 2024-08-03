@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, current_app
-from models import create_flight, find_flights_by_departure, find_flights_by_arrival, find_flight_by_number, deactivate_flight
+from models import create_flight, find_flights_by_departure, find_flights_by_arrival, find_flight_by_number, deactivate_flight, get_flight_collection
 from decorators import token_required, admin_or_staff_required
 from bson import json_util
 
@@ -64,3 +64,23 @@ def deactivate(current_user):
     if deactivate_flight(db, data['flight_number']):
         return jsonify({'message': 'Flight bookings closed successfully'}), 200
     return jsonify({'error': 'Flight not found'}), 404
+
+@flights_bp.route('/search/<query>', methods=['GET'])
+def search_flights(query):
+    db = current_app.db
+    search_criteria = {
+        "$or": [
+            {"flight_number": {"$regex": query, "$options": "i"}},
+            {"departure": {"$regex": query, "$options": "i"}},
+            {"arrival": {"$regex": query, "$options": "i"}}
+        ]
+    }
+    flights_collection = get_flight_collection(db)
+    flights = list(flights_collection.find(search_criteria))
+    
+    # Convert ObjectId to string for JSON serialization
+    for flight in flights:
+        if '_id' in flight:
+            flight['_id'] = str(flight['_id'])
+    
+    return jsonify(json_util.loads(json_util.dumps(flights)))
