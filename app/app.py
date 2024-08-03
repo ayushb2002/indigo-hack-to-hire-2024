@@ -13,7 +13,7 @@ client = None
 def create_app():
     global client
     app = Flask(__name__)
-    config = Config(os.getenv('MONGO_UID'), os.getenv('MONGO_PWD'), os.getenv('SECRET_KEY'))
+    config = Config(os.getenv('MONGO_URL'), os.getenv('SECRET_KEY'))
     app.config.from_object(config)
 
     CORS(app, resources={r"/*": {"origins": "*"}})
