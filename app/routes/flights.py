@@ -70,9 +70,9 @@ def search_flights(query):
     db = current_app.db
     search_criteria = {
         "$or": [
-            {"flight_number": {"$regex": query, "$options": "i"}},
-            {"departure": {"$regex": query, "$options": "i"}},
-            {"arrival": {"$regex": query, "$options": "i"}}
+            {"flight_number": {"$regex": f"^{query}", "$options": "i"}},
+            {"departure": {"$regex": f"^{query}", "$options": "i"}},
+            {"arrival": {"$regex": f"^{query}", "$options": "i"}}
         ]
     }
     flights_collection = get_flight_collection(db)

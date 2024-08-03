@@ -151,7 +151,7 @@ const Search = ({ color }) => {
 export default Search;
 
 Search.defaultProps = {
-    color: "light",
+    color: "dark",
   };
   
 Search.propTypes = {
