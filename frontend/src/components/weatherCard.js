@@ -24,32 +24,32 @@ export default function WeatherCard({ city, todayForecast, tomorrowForecast }) {
         </div>
         <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
             <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
-              { city }
+              { city } - Forecast
             </h6>
             <div className="flex flex-wrap">
               <div className="w-full lg:w-6/12 px-4">
                 <div className="relative w-full mb-3">
                   <ul>
-                    <li>Date - { todayForecast.date }</li>
-                    <li>Maximum temperature - {todayForecast.maxtemp_c} C</li>
-                    <li>Minimum temperature - {todayForecast.mintemp_c} C</li>
-                    <li>Wind Speed - {todayForecast.maxwind_kph} KPH</li>
-                    <li>Average Humidity - {todayForecast.humidity}</li>
-                    <li>Precipitation - {todayForecast.total_precipitation_mm} mm</li>
-                    <li>Condition - {todayForecast.condition}</li>
+                    <li><span class="font-bold">Date</span> - { todayForecast.date }</li>
+                    <li><span class="font-bold">Maximum temperature</span> - {todayForecast.maxtemp_c} C</li>
+                    <li><span class="font-bold">Minimum temperature</span> - {todayForecast.mintemp_c} C</li>
+                    <li><span class="font-bold">Wind Speed</span> - {todayForecast.maxwind_kph} KPH</li>
+                    <li><span class="font-bold">Average Humidity</span> - {todayForecast.humidity}</li>
+                    <li><span class="font-bold">Precipitation</span> - {todayForecast.total_precipitation_mm} mm</li>
+                    <li><span class="font-bold">Condition</span> - {todayForecast.condition}</li>
                   </ul>
                 </div>
               </div>
               <div className="w-full lg:w-6/12 px-4">
                 <div className="relative w-full mb-3">
                     <ul>
-                        <li>Date - { tomorrowForecast.date }</li>
-                        <li>Maximum temperature - {tomorrowForecast.maxtemp_c} C</li>
-                        <li>Minimum temperature - {tomorrowForecast.mintemp_c} C</li>
-                        <li>Wind Speed - {tomorrowForecast.maxwind_kph} KPH</li>
-                        <li>Average Humidity - {tomorrowForecast.humidity}</li>
-                        <li>Precipitation - {tomorrowForecast.total_precipitation_mm} mm</li>
-                        <li>Condition - {tomorrowForecast.condition}</li>
+                        <li><span class="font-bold">Date</span> - { tomorrowForecast.date }</li>
+                        <li><span class="font-bold">Maximum temperature</span> - {tomorrowForecast.maxtemp_c} C</li>
+                        <li><span class="font-bold">Minimum temperature</span> - {tomorrowForecast.mintemp_c} C</li>
+                        <li><span class="font-bold">Wind Speed</span> - {tomorrowForecast.maxwind_kph} KPH</li>
+                        <li><span class="font-bold">Average Humidity</span> - {tomorrowForecast.humidity}</li>
+                        <li><span class="font-bold">Precipitation</span> - {tomorrowForecast.total_precipitation_mm} mm</li>
+                        <li><span class="font-bold">Condition</span> - {tomorrowForecast.condition}</li>
                     </ul>
                 </div>
               </div>
